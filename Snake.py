@@ -1,7 +1,7 @@
 import pygame
 import sys
-from snake_class import Snake
-from food_class import Food
+from Player import Snake
+from Food import Food
 pygame.init()
 
 
@@ -32,16 +32,21 @@ food = Food()
 while 1:
     snake.move()
     snake.update(food.rect)
-    snake.draw(screen, snake.rect)
+    snake.draw(screen, (255, 0, 0), snake.head, snake.body)
+    print(snake.body)
     # --------------------------------------
     # Eating food
-    if snake.rect.colliderect(food.rect):
-        snake.add_block()
-        food = Food()
+    if snake.head.rect.colliderect(food.rect):
+        snake.add_block(food.rect.x, food.rect.y,
+                        food.rect.width,
+                        food.rect.height)
+        food.eaten(snake)
+        snake.score += 1
+
         print(snake.score)
+        print(snake.movements)
     # --------------------------------------
     food.draw(screen, food.color, food.rect)
-    print(food.rect)
     draw_grid(screen, width, 40)
     pygame.display.update()
     screen.fill((0, 0, 0))

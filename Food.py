@@ -24,3 +24,7 @@ class Food(pygame.sprite.Sprite):
 
     def draw(self, screen, color, rect):
         pygame.draw.rect(screen, color, rect)
+
+    def eaten(self, snake):
+        if self.rect.colliderect(snake.head.rect):
+            self.rect = random.choice(random_spawn_point(800, 600, 20))
