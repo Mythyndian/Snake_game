@@ -27,29 +27,28 @@ screen = pygame.display.set_mode(screen_size)
 clock = pygame.time.Clock()
 
 # Object creation
-snake = Snake()
+snake = Snake(0, 0, 20, 20)
 food = Food()
 while 1:
     snake.move()
-    snake.update(food.rect)
-    snake.draw(screen, (255, 0, 0), snake.head, snake.body)
-    print(snake.body)
+    snake.update()
     # --------------------------------------
     # Eating food
     if snake.head.rect.colliderect(food.rect):
+        food.eaten(snake)
+        snake.score += 1
         snake.add_block(food.rect.x, food.rect.y,
                         food.rect.width,
                         food.rect.height)
-        food.eaten(snake)
-        snake.score += 1
 
         print(snake.score)
-        print(snake.movements)
+        # print(snake.movements)
     # --------------------------------------
+    snake.draw(screen, (255, 0, 0), snake)
     food.draw(screen, food.color, food.rect)
     draw_grid(screen, width, 40)
     pygame.display.update()
     screen.fill((0, 0, 0))
-    clock.tick(2)
+    clock.tick(4)
 
 pygame.quit()

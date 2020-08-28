@@ -8,7 +8,6 @@ class Cube(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.color = (255, 0, 0)
         self.rect = pygame.Rect(x, y, width, height)
-        self.movement_speed = 20
         self.direction_of_movement = 'right'
 
     def draw(self, surface, color, rect):
@@ -16,10 +15,12 @@ class Cube(pygame.sprite.Sprite):
 
 
 class Snake(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, x, y, width, height):
         self.body = pygame.sprite.Group()
         self.score = 0
-        self.head = Cube(0, 0, 20, 20)
+        self.head = Cube(x, y, width, height)
+        self.head_group = pygame.sprite.Group()
+        self.head_group.add(self.head)
         self.color = (255, 0, 0)
         self.movements = []
 
@@ -37,18 +38,12 @@ class Snake(pygame.sprite.Sprite):
                 elif event.key == pygame.K_w:
                     self.head.direction_of_movement = 'up'
 
-    def update(self, colliding_object):
-        # if len(self.body) > 1
-        #    for part in self.body:
+    def update(self):
         # Body update
-        if self.body != []:
-            for number, value in enumerate(self.body):
-                if number != 0:
-                    value.rect.x = self.movements[-number][0]
-                    value.rect.y = self.movements[-number][1]
-                else:
-                    value.rect.x = self.movements[number][0]
-                    value.rect.y = self.movements[number][1]
+        # Needs bugfix
+        for number, value in enumerate(self.body):
+            value.rect.x = self.movements[-number-1][0]
+            value.rect.y = self.movements[-number-1][1]
 
         # Head update
         if self.head.direction_of_movement == 'right':
@@ -66,12 +61,12 @@ class Snake(pygame.sprite.Sprite):
         # Tracking movements
         self.movements.append((self.head.rect.x, self.head.rect.y))
 
-    def draw(self, surface, color, head, body):
+    def draw(self, surface, color, snake):
         # Draw head
-        pygame.draw.rect(surface, color, head.rect)
+        snake.head.draw(surface, color, snake.head.rect)
         # Draw body
-        for item in body:
-            pygame.draw.rect(surface, color, item.rect)
+        for item in snake.body:
+            item.draw(surface, color, item.rect)
 
     def add_block(self, x, y, width, height):
         self.body.add(Cube(x, y, width, height))
