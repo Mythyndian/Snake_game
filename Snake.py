@@ -1,8 +1,13 @@
 import pygame
+import pygame.freetype
 import sys
+import time
 from Player import Snake
 from Food import Food
 pygame.init()
+pygame.font.init()
+
+FONT = pygame.freetype.Font('font/pixelated.ttf', 40)
 
 
 def draw_grid(surface, width, rows):
@@ -30,8 +35,19 @@ clock = pygame.time.Clock()
 snake = Snake(0, 0, 20, 20)
 food = Food()
 while 1:
+
     snake.move()
     snake.update()
+    if pygame.sprite.spritecollide(snake.head, snake.body, False) or snake.game_over:
+        screen.fill((0, 0, 0))
+
+        FONT.render_to(screen,
+                       (350, 250),
+                       f'SCORE: {snake.score}',
+                       (255, 255, 255))
+        pygame.display.update()
+        pygame.time.wait(1000)
+        sys.exit(0)
     # --------------------------------------
     # Eating food
     if snake.head.rect.colliderect(food.rect):
@@ -44,9 +60,11 @@ while 1:
         print(snake.score)
         # print(snake.movements)
     # --------------------------------------
+
     snake.draw(screen, (255, 0, 0), snake)
     food.draw(screen, food.color, food.rect)
     draw_grid(screen, width, 40)
+
     pygame.display.update()
     screen.fill((0, 0, 0))
     clock.tick(4)

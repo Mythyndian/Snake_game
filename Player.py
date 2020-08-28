@@ -23,6 +23,7 @@ class Snake(pygame.sprite.Sprite):
         self.head_group.add(self.head)
         self.color = (255, 0, 0)
         self.movements = []
+        self.game_over = False
 
     def move(self):
         for event in pygame.event.get():
@@ -49,15 +50,23 @@ class Snake(pygame.sprite.Sprite):
         if self.head.direction_of_movement == 'right':
             if self.head.rect.x + 20 < 800:
                 self.head.rect.x += 20
+            else:
+                self.game_over = True
         elif self.head.direction_of_movement == 'left':
             if self.head.rect.x - 20 > -20:
                 self.head.rect.x -= 20
+            else:
+                self.game_over = True
         elif self.head.direction_of_movement == 'up':
             if self.head.rect.y - 20 > -20:
                 self.head.rect.y -= 20
+            else:
+                self.game_over = True
         elif self.head.direction_of_movement == 'down':
             if self.head.rect.y + 20 < 600:
                 self.head.rect.y += 20
+            else:
+                self.game_over = True
         # Tracking movements
         self.movements.append((self.head.rect.x, self.head.rect.y))
 
